@@ -166,15 +166,18 @@ RETURNS INT
 AS
 BEGIN
 		DECLARE @RES INT;
-		SET @RES = (SELECT COUNT(*)
+		SET @RES = (
+					SELECT COUNT(*)
 						FROM	(
 									SELECT		COUNT(u.Id) AS z
 									FROM		Commits AS c
 									LEFT JOIN	Users AS u ON c.ContributorId = u.Id
 									LEFT JOIN	Files AS f ON c.Id = f.CommitId
-									where U.Username = 'UnderSinduxrein'
+									where U.Username = @username
 									GROUP BY	u.Username, c.[Message]
-								) AS [Z])
+								) 
+					AS [Z]
+					)
 		IF @RES IS NULL
 		SET @RES = 0;
 
@@ -183,7 +186,9 @@ BEGIN
 END;
 GO;
 
+select * FROM Users WHERE Username = 'WhatTerrorBel'
 SELECT dbo.udf_AllUserCommits('UnderSinduxrein');
+SELECT dbo.udf_AllUserCommits('WhatTerrorBel');
 
 
 -- Problem 12
@@ -204,4 +209,6 @@ END;
 EXEC usp_SearchForFiles 'html'
 
 GO;
+
+
 
